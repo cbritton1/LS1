@@ -9,6 +9,12 @@ import java.awt.Graphics;
 
 import javax.swing.ImageIcon;
 
+/**
+ * Creates the graphics for the image panel.
+ * 
+ * @author Cory Britton
+ *
+ */
 @SuppressWarnings({ "serial", "unused" })
 public class ImagePanel extends JPanel {
 	private boolean loser = false;
@@ -20,6 +26,11 @@ public class ImagePanel extends JPanel {
 	private String[] bullys = { "Bully3", "Bully1", "BullyWedgie", "Bully2", "Bully" };
 	private static int bullyIndex;
 
+	/**
+	 * Sets the bully index.
+	 * 
+	 * @param index
+	 */
 	public static void setBullyIndex(int index) {
 		bullyIndex = index;
 	}
@@ -49,34 +60,67 @@ public class ImagePanel extends JPanel {
 
 	}
 
+	/**
+	 * Creates the lemonade stand with a normal sunny day.
+	 * 
+	 * @param g
+	 */
 	private void normalDay(Graphics g) {
 		createClouds(g);
 		createLemonadeStand(g);
 	}
 
+	/**
+	 * Cycles through kids.
+	 */
 	public void changeKid() {
 		kidIndex = ++kidIndex % kids.length;
 		repaint();
 	}
 
+	/**
+	 * Checks to see if there is a storm present.
+	 * 
+	 * @return
+	 */
 	public boolean isStorm() {
 		return storm;
 	}
 
+	/**
+	 * Creates a storm.
+	 * 
+	 * @param storm
+	 */
 	public void setStorm(boolean storm) {
 		this.storm = storm;
 		repaint();
 	}
 
+	/**
+	 * Checks to see if there is a bully present.
+	 * 
+	 * @return
+	 */
 	public boolean isBully() {
 		return bully;
 	}
 
+	/**
+	 * Creates a bully.
+	 * 
+	 * @param bully
+	 */
 	public void setBully(boolean bully) {
 		this.bully = bully;
 		repaint();
 	}
 
+	/**
+	 * Checks to see if you lost.
+	 * 
+	 * @param loser
+	 */
 	public void setLoser(boolean loser) {
 		this.loser = loser;
 		repaint();
@@ -88,6 +132,11 @@ public class ImagePanel extends JPanel {
 		thread3.start();
 	}
 
+	/**
+	 * Checks to see if you won.
+	 * 
+	 * @param winner
+	 */
 	public void setWinner(boolean winner) {
 		this.winner = winner;
 		repaint();
@@ -99,75 +148,97 @@ public class ImagePanel extends JPanel {
 		thread3.start();
 	}
 
+	/**
+	 * Creates a bully.
+	 * 
+	 * @param g
+	 */
 	private void createBully(Graphics g) {
-		ImageIcon loser = new ImageIcon(
-				ImagePanel.class.getResource("/lemonadeStand/Images/" + bullys[bullyIndex] + ".png"));
-		loser.paintIcon(this, g, 80, 250);
+		createImage(g, "/lemonadeStand/Images/" + bullys[bullyIndex] + ".png", 80, 250);
 	}
 
+	/**
+	 * Creates a storm.
+	 * 
+	 * @param g
+	 */
 	private void createStormBackground(Graphics g) {
 		setBackground(new Color(51, 51, 51));
-		ImageIcon background = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/stormLeft.png"));
-		background.paintIcon(this, g, 100, 20);
-		ImageIcon background2 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/stormRight.png"));
-		background2.paintIcon(this, g, 600, 20);
-		ImageIcon background3 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/puddle.png"));
-		background3.paintIcon(this, g, 20, 350);
-		ImageIcon background4 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/puddle1.png"));
-		background4.paintIcon(this, g, 100, 400);
-		ImageIcon background5 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/puddle2.png"));
-		background5.paintIcon(this, g, 600, 400);
-		ImageIcon rain = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/rain.gif"));
-		rain.paintIcon(this, g, 0, 0);
-		ImageIcon rain1 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/rain.gif"));
-		rain1.paintIcon(this, g, 0, 300);
-		ImageIcon rain2 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/rain.gif"));
-		rain2.paintIcon(this, g, 400, 300);
-		ImageIcon rain3 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/rain.gif"));
-		rain3.paintIcon(this, g, 400, 0);
-		ImageIcon rain4 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/rain.gif"));
-		rain4.paintIcon(this, g, 800, 300);
-		ImageIcon rain5 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/rain.gif"));
-		rain5.paintIcon(this, g, 800, 0);
-		// repaint();
+		createImage(g, "/lemonadeStand/Images/stormLeft.png", 100, 20);
+		createImage(g, "/lemonadeStand/Images/stormRight.png", 600, 20);
+		createImage(g, "/lemonadeStand/Images/puddle.png", 20, 350);
+		createImage(g, "/lemonadeStand/Images/puddle1.png", 100, 400);
+		createImage(g, "/lemonadeStand/Images/puddle2.png", 600, 400);
+		createImage(g, "/lemonadeStand/Images/rain.gif", 0, 0);
+		createImage(g, "/lemonadeStand/Images/rain.gif", 0, 300);
+		createImage(g, "/lemonadeStand/Images/rain.gif", 400, 300);
+		createImage(g, "/lemonadeStand/Images/rain.gif", 400, 0);
+		createImage(g, "/lemonadeStand/Images/rain.gif", 800, 300);
+		createImage(g, "/lemonadeStand/Images/rain.gif", 800, 0);
 	}
 
+	/**
+	 * Creates the Lemonade stand.
+	 * 
+	 * @param g
+	 */
 	private void createLemonadeStand(Graphics g) {
-		ImageIcon background = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/backdrop.png"));
-		background.paintIcon(this, g, 0, 0);
-		ImageIcon sidewalk = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/Sidewalk.png"));
-		sidewalk.paintIcon(this, g, 0, 500);
-		ImageIcon lemonadeStand = new ImageIcon(
-				ImagePanel.class.getResource("/lemonadeStand/Images/LemonadeStand.png"));
-		lemonadeStand.paintIcon(this, g, 300, 20);
+		createImage(g, "/lemonadeStand/Images/backdrop.png", 0, 0);
+		createImage(g, "/lemonadeStand/Images/Sidewalk.png", 0, 500);
+		createImage(g, "/lemonadeStand/Images/LemonadeStand.png", 300, 20);
 	}
 
+	/**
+	 * Creates a sunny day.
+	 * 
+	 * @param g
+	 */
 	private void createClouds(Graphics g) {
-		ImageIcon sun = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/Sun.gif"));
-		sun.paintIcon(this, g, 540, 0);
-		ImageIcon cloud1 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/Cloud1.png"));
-		cloud1.paintIcon(this, g, 350, 0);
-		ImageIcon cloud2 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/Cloud2.png"));
-		cloud2.paintIcon(this, g, 700, 0);
-		ImageIcon cloud3 = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/Cloud3.png"));
-		cloud3.paintIcon(this, g, 0, 0);
+		createImage(g, "/lemonadeStand/Images/Sun.gif", 540, 0);
+		createImage(g, "/lemonadeStand/Images/Cloud1.png", 350, 0);
+		createImage(g, "/lemonadeStand/Images/Cloud2.png", 700, 0);
+		createImage(g, "/lemonadeStand/Images/Cloud3.png", 0, 0);
 	}
 
+	/**
+	 * Creates a customer.
+	 * 
+	 * @param g
+	 */
 	private void createKidLeft(Graphics g) {
-		ImageIcon background = new ImageIcon(
-				ImagePanel.class.getResource("/lemonadeStand/Images/" + kids[kidIndex] + ".gif"));
-		background.paintIcon(this, g, 50, 210);
+		createImage(g, "/lemonadeStand/Images/" + kids[kidIndex] + ".gif", 50, 210);
 	}
 
+	/**
+	 * Creates the loser image.
+	 * 
+	 * @param g
+	 */
 	private void loserImage(Graphics g) {
-		ImageIcon loser = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/Loser.jpg"));
-		loser.paintIcon(this, g, 0, 0);
+		createImage(g, "/lemonadeStand/Images/Loser.jpg", 0, 0);
 	}
 
+	/**
+	 * Creates the winner image
+	 * 
+	 * @param g
+	 */
 	private void winnerImage(Graphics g) {
 		setBackground(new Color(255, 255, 255));
-		ImageIcon loser = new ImageIcon(ImagePanel.class.getResource("/lemonadeStand/Images/Winner.gif"));
-		loser.paintIcon(this, g, 30, 0);
+		createImage(g, "/lemonadeStand/Images/Winner.gif", 30, 0);
+	}
+
+	/**
+	 * Creates a graphic.
+	 * 
+	 * @param g - leave this as Graphics g.
+	 * @param s - URL to the image.
+	 * @param x - X coordinate.
+	 * @param y - Y coordinate.
+	 */
+	private void createImage(Graphics g, String s, int x, int y) {
+		ImageIcon image = new ImageIcon(ImagePanel.class.getResource(s));
+		image.paintIcon(this, g, x, y);
 	}
 
 }

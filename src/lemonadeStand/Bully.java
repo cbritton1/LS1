@@ -5,8 +5,21 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 
+/**
+ * Decides what a bully will do when he shows up.
+ * 
+ * @author Cory Britton
+ *
+ */
 @SuppressWarnings("unused")
 public class Bully {
+
+	/**
+	 * Randomly selects what bully shows up.
+	 * 
+	 * @param money
+	 * @return
+	 */
 	public static int bully(int money) {
 		int takenMoney = 0;
 		int totalMoney = 0;

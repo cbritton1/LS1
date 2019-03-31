@@ -3,17 +3,28 @@ package lemonadeStand;
 import java.awt.Color;
 import java.util.Random;
 
+/**
+ * runs the storm, bully, or lotto.
+ * 
+ * @author Cory Britton
+ *
+ */
 @SuppressWarnings({ "serial", "unused" })
 public class StormBullyLotto extends DemoLemonadeStand {
+
+	/**
+	 * decides if you get to experience the storm, bully, or lotto.
+	 * 
+	 * @param money
+	 * @param chance
+	 * @return
+	 */
 	public static int stormOrBully(int money, int chance) {
 		Random rand = new Random();
 		int num = rand.nextInt(chance) + 1;
 
 		if (num <= chanceOfStorm * chance) {
-			int dayCount = getDay();
-			setDay(++dayCount);
-			dayInt.setText(String.valueOf(dayCount));
-			cupsBeingMade.setText("");
+			incrementDay();
 			imagePanel.setStorm(true);
 			Thread thread3 = new Thread() {
 				public void run() {
@@ -24,6 +35,7 @@ public class StormBullyLotto extends DemoLemonadeStand {
 			money = storm(money);
 			if (money == 0) {
 				DemoLemonadeStand.txtrOutputTextPanel.setText("You Lost all of Your Money in the Storm!!");
+				imagePanel.setLoser(true);
 				Music.youLose();
 			}
 
@@ -31,10 +43,7 @@ public class StormBullyLotto extends DemoLemonadeStand {
 //	       money = Lottery.lottery(money);
 //	         
 		} else if ((num >= (minChanceOfBully * chance)) && (num <= (maxChanceOfBully * chance))) {
-			int dayCount = getDay();
-			setDay(++dayCount);
-			dayInt.setText(String.valueOf(dayCount));
-			cupsBeingMade.setText("");
+			incrementDay();
 			money = Bully.bully(money);
 			imagePanel.setBully(true);
 			Thread thread3 = new Thread() {
@@ -48,6 +57,22 @@ public class StormBullyLotto extends DemoLemonadeStand {
 
 	}
 
+	/**
+	 * Increments the day.
+	 */
+	private static void incrementDay() {
+		int dayCount = getDay();
+		setDay(++dayCount);
+		dayInt.setText(String.valueOf(dayCount));
+		cupsBeingMade.setText("");
+	}
+
+	/**
+	 * Returns how much money you lost in the storm.
+	 * 
+	 * @param money
+	 * @return
+	 */
 	public static int storm(int money) {
 		Random rand = new Random();
 		int keep = rand.nextInt(3) + 7;

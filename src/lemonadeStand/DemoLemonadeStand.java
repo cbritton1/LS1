@@ -29,6 +29,12 @@ import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+/**
+ * Creates the game Lemonade Stand.
+ * 
+ * @author Cory Britton
+ *
+ */
 @SuppressWarnings({ "serial", "unused" })
 public class DemoLemonadeStand extends JFrame {
 	private JPanel contentPane;
@@ -43,9 +49,9 @@ public class DemoLemonadeStand extends JFrame {
 	 * minChanceOfBully = .051, maxChanceOfBully = .10, minChanceOfLotto = .101,
 	 * maxChanceOfLotto = .30
 	 */
-	public static double chanceOfStorm = .10; // 0% - 0.99%
-	public static double minChanceOfBully = .101; // 0% - 0.99%
-	public static double maxChanceOfBully = .20; // 0% - 0.99%
+	public static double chanceOfStorm = .99; // 0% - 0.99%
+	public static double minChanceOfBully = .0; // 0% - 0.99%
+	public static double maxChanceOfBully = .0; // 0% - 0.99%
 	public static double minChanceOfLotto = .0; // 0% - 0.99%
 	public static double maxChanceOfLotto = .0; // 0% - 0.99%
 
@@ -64,11 +70,20 @@ public class DemoLemonadeStand extends JFrame {
 	private static JButton btnNewButton;
 	public static ImagePanel imagePanel;
 
-	// getters and setters
+	/**
+	 * Returns the day it is.
+	 * 
+	 * @return
+	 */
 	public static int getDay() {
 		return day;
 	}
 
+	/**
+	 * Sets what day it is.
+	 * 
+	 * @param d
+	 */
 	public static void setDay(int d) {
 		day = d;
 	}
@@ -80,6 +95,9 @@ public class DemoLemonadeStand extends JFrame {
 		play();
 	}
 
+	/**
+	 * Starts the game.
+	 */
 	static void play() {
 		Thread thread2 = new Thread() {
 			public void run() {
@@ -108,7 +126,7 @@ public class DemoLemonadeStand extends JFrame {
 	};
 
 	/**
-	 * Create the frame.
+	 * Create the main frame.
 	 */
 	public DemoLemonadeStand() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -134,11 +152,16 @@ public class DemoLemonadeStand extends JFrame {
 
 	}
 
+	/**
+	 * Creates the game information panel.
+	 * 
+	 * @return
+	 */
 	private JPanel createInfoLabel() {
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(255, 255, 153));
+		JPanel gameInformationPanel = new JPanel();
+		gameInformationPanel.setBackground(new Color(255, 255, 153));
 
-		panel_1.setLayout(new GridLayout(7, 1, 0, 0));
+		gameInformationPanel.setLayout(new GridLayout(7, 1, 0, 0));
 
 		JLabel lblGameInformation = new JLabel("Game Information");
 		lblGameInformation.setBorder(null);
@@ -146,12 +169,12 @@ public class DemoLemonadeStand extends JFrame {
 		lblGameInformation.setBackground(new Color(255, 255, 153));
 		lblGameInformation.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGameInformation.setFont(new Font("Noteworthy", Font.BOLD | Font.ITALIC, 15));
-		panel_1.add(lblGameInformation);
+		gameInformationPanel.add(lblGameInformation);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(new Color(255, 255, 153));
 		panel_2.setBorder(new EmptyBorder(10, 8, 0, 8));
-		panel_1.add(panel_2);
+		gameInformationPanel.add(panel_2);
 
 		JLabel lblMoney = new JLabel("Money: $");
 		lblMoney.setFont(new Font("Noteworthy", Font.BOLD, 14));
@@ -166,7 +189,7 @@ public class DemoLemonadeStand extends JFrame {
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(255, 255, 153));
 		panel_3.setBorder(new EmptyBorder(10, 8, 0, 8));
-		panel_1.add(panel_3);
+		gameInformationPanel.add(panel_3);
 
 		JLabel lblDay = new JLabel("Day: ");
 		lblDay.setFont(new Font("Noteworthy", Font.BOLD, 14));
@@ -179,7 +202,7 @@ public class DemoLemonadeStand extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0, 0, 0));
 		panel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		panel_1.add(panel);
+		gameInformationPanel.add(panel);
 		panel.setLayout(new GridLayout(3, 0, 0, 0));
 
 		JLabel lblYouCouldHave = new JLabel("You could have UP to");
@@ -202,10 +225,15 @@ public class DemoLemonadeStand extends JFrame {
 		panel.add(lblPeopleShowUp);
 
 		JLabel label = new JLabel("                                ");
-		panel_1.add(label);
-		return panel_1;
+		gameInformationPanel.add(label);
+		return gameInformationPanel;
 	}
 
+	/**
+	 * Creates the input panel.
+	 * 
+	 * @return
+	 */
 	private JPanel createOutputTextPanel() {
 		JPanel panel = new JPanel();
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -213,24 +241,24 @@ public class DemoLemonadeStand extends JFrame {
 
 		panel.setLayout(new BorderLayout(0, 0));
 
-		JPanel controlPanelArea = new JPanel();
-		controlPanelArea.setBorder(new LineBorder(new Color(255, 250, 205), 2));
-		controlPanelArea.setBackground(new Color(255, 255, 204));
-		panel.add(controlPanelArea, BorderLayout.EAST);
-		controlPanelArea.setLayout(new GridLayout(3, 1, 0, 0));
+		JPanel inputPanel = new JPanel();
+		inputPanel.setBorder(new LineBorder(new Color(255, 250, 205), 2));
+		inputPanel.setBackground(new Color(255, 255, 204));
+		panel.add(inputPanel, BorderLayout.EAST);
+		inputPanel.setLayout(new GridLayout(3, 1, 0, 0));
 
 		JTextArea txtrHowMuch = new JTextArea();
 		txtrHowMuch.setFont(new Font("Noteworthy", Font.PLAIN, 14));
 		txtrHowMuch.setBackground(new Color(255, 250, 205));
 		txtrHowMuch.setBorder(new EmptyBorder(4, 4, 8, 4));
 		txtrHowMuch.setText("How many cups would \n" + "you like to make?");
-		controlPanelArea.add(txtrHowMuch);
+		inputPanel.add(txtrHowMuch);
 
 		// CUPS MADE INPUT
 		cupsBeingMade = new JTextField();
 		cupsBeingMade.setHorizontalAlignment(SwingConstants.CENTER);
 		cupsBeingMade.setBorder(new LineBorder(new Color(0, 0, 0), 4));
-		controlPanelArea.add(cupsBeingMade);
+		inputPanel.add(cupsBeingMade);
 		cupsBeingMade.setColumns(10);
 
 //NEXT DAY ACTION BUTTON	
@@ -293,7 +321,7 @@ public class DemoLemonadeStand extends JFrame {
 				}
 			}
 		});
-		controlPanelArea.add(btnNewButton);
+		inputPanel.add(btnNewButton);
 
 		txtrOutputTextPanel = new JTextPane();
 		txtrOutputTextPanel.setFont(new Font("Noteworthy", Font.PLAIN, 15));
@@ -305,6 +333,11 @@ public class DemoLemonadeStand extends JFrame {
 		return panel;
 	}
 
+	/**
+	 * Creates the title bar.
+	 * 
+	 * @return
+	 */
 	private JLabel createLblTitle() {
 		lblTitle = new JLabel("Lemonade Stand");
 		lblTitle.setBorder(new EmptyBorder(2, 0, 0, 0));

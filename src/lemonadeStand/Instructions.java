@@ -18,6 +18,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
+/**
+ * 
+ * @author Cory Britton
+ *
+ */
 @SuppressWarnings({ "serial", "unused" })
 public class Instructions extends JDialog {
 

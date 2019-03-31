@@ -2,10 +2,22 @@ package lemonadeStand;
 
 import java.util.Random;
 
+/**
+ * This is the logic behind the Lemonade stand.
+ * 
+ * @author Cory Britton
+ *
+ */
 @SuppressWarnings("serial")
 public class LemonadeStandLogic extends DemoLemonadeStand {
 
-	// can you afford to make that many cups
+	/**
+	 * Checks to see if you can afford to make the requested cups.
+	 * 
+	 * @param cupsMade
+	 * @param money
+	 * @return
+	 */
 	public static boolean canAffordRequestedCups(int cupsMade, int money) {
 		while (cupsMade > money) {
 			return false;
@@ -13,7 +25,12 @@ public class LemonadeStandLogic extends DemoLemonadeStand {
 		return true;
 	}
 
-	// Random people generator
+	/**
+	 * Generates a random amount of people.
+	 * 
+	 * @param day
+	 * @return
+	 */
 	public static int randomPeople(int day) {
 		Random rand = new Random();
 		int randomNum = day + 11;
@@ -49,7 +66,6 @@ public class LemonadeStandLogic extends DemoLemonadeStand {
 	 */
 	public static int currentMoney(int cupsSold, int currentMoney) {
 		int totalMoney = currentMoney + (cupsSold * 2);
-
 		return totalMoney;
 	}
 
