@@ -1,6 +1,7 @@
 package lemonadeStand;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -28,6 +29,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.Component;
 
 /**
  * Creates the game Lemonade Stand.
@@ -37,6 +39,7 @@ import java.awt.Rectangle;
  */
 @SuppressWarnings({ "serial", "unused" })
 public class DemoLemonadeStand extends JFrame {
+	private CardLayout cardLayout = new CardLayout();
 	private JPanel contentPane;
 	public static JTextField cupsBeingMade;
 
@@ -49,9 +52,9 @@ public class DemoLemonadeStand extends JFrame {
 	 * minChanceOfBully = .051, maxChanceOfBully = .10, minChanceOfLotto = .101,
 	 * maxChanceOfLotto = .30
 	 */
-	public static double chanceOfStorm = .99; // 0% - 0.99%
-	public static double minChanceOfBully = .0; // 0% - 0.99%
-	public static double maxChanceOfBully = .0; // 0% - 0.99%
+	public static double chanceOfStorm = .05; // 0% - 0.99%
+	public static double minChanceOfBully = .051; // 0% - 0.99%
+	public static double maxChanceOfBully = .10; // 0% - 0.99%
 	public static double minChanceOfLotto = .0; // 0% - 0.99%
 	public static double maxChanceOfLotto = .0; // 0% - 0.99%
 
@@ -146,10 +149,13 @@ public class DemoLemonadeStand extends JFrame {
 		JPanel panel_1 = createInfoLabel();
 		contentPane.add(panel_1, BorderLayout.WEST);
 
-		imagePanel = new ImagePanel();
-		imagePanel.setBackground(new Color(0, 191, 255));
-		contentPane.add(imagePanel, BorderLayout.CENTER);
+		JPanel parentPanel = new JPanel();
+		contentPane.add(parentPanel, BorderLayout.CENTER);
 
+		imagePanel = new ImagePanel();
+		parentPanel.setLayout(new CardLayout(0, 0));
+		parentPanel.add(imagePanel, "name_30405707861963");
+		imagePanel.setBackground(new Color(0, 191, 255));
 	}
 
 	/**
@@ -171,58 +177,58 @@ public class DemoLemonadeStand extends JFrame {
 		lblGameInformation.setFont(new Font("Noteworthy", Font.BOLD | Font.ITALIC, 15));
 		gameInformationPanel.add(lblGameInformation);
 
-		JPanel panel_2 = new JPanel();
-		panel_2.setBackground(new Color(255, 255, 153));
-		panel_2.setBorder(new EmptyBorder(10, 8, 0, 8));
-		gameInformationPanel.add(panel_2);
+		JPanel moneyPanel = new JPanel();
+		moneyPanel.setBackground(new Color(255, 255, 153));
+		moneyPanel.setBorder(new EmptyBorder(10, 8, 0, 8));
+		gameInformationPanel.add(moneyPanel);
 
 		JLabel lblMoney = new JLabel("Money: $");
 		lblMoney.setFont(new Font("Noteworthy", Font.BOLD, 14));
-		panel_2.add(lblMoney);
+		moneyPanel.add(lblMoney);
 		lblMoney.setHorizontalAlignment(SwingConstants.LEFT);
 
 		moneyInt = new JLabel(String.valueOf(money));
 		moneyInt.setFont(new Font("Noteworthy", Font.BOLD, 14));
-		panel_2.add(moneyInt);
+		moneyPanel.add(moneyInt);
 		moneyInt.setHorizontalAlignment(SwingConstants.RIGHT);
 
-		JPanel panel_3 = new JPanel();
-		panel_3.setBackground(new Color(255, 255, 153));
-		panel_3.setBorder(new EmptyBorder(10, 8, 0, 8));
-		gameInformationPanel.add(panel_3);
+		JPanel dayPanel = new JPanel();
+		dayPanel.setBackground(new Color(255, 255, 153));
+		dayPanel.setBorder(new EmptyBorder(10, 8, 0, 8));
+		gameInformationPanel.add(dayPanel);
 
 		JLabel lblDay = new JLabel("Day: ");
 		lblDay.setFont(new Font("Noteworthy", Font.BOLD, 14));
-		panel_3.add(lblDay);
+		dayPanel.add(lblDay);
 
 		dayInt = new JLabel(String.valueOf(day));
 		dayInt.setFont(new Font("Noteworthy", Font.BOLD, 14));
-		panel_3.add(dayInt);
+		dayPanel.add(dayInt);
 
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(0, 0, 0));
-		panel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		gameInformationPanel.add(panel);
-		panel.setLayout(new GridLayout(3, 0, 0, 0));
+		JPanel peopleCountPanel = new JPanel();
+		peopleCountPanel.setBackground(new Color(0, 0, 0));
+		peopleCountPanel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		gameInformationPanel.add(peopleCountPanel);
+		peopleCountPanel.setLayout(new GridLayout(3, 0, 0, 0));
 
 		JLabel lblYouCouldHave = new JLabel("You could have UP to");
 		lblYouCouldHave.setFont(new Font("Noteworthy", Font.PLAIN, 15));
 		lblYouCouldHave.setForeground(new Color(255, 255, 255));
 		lblYouCouldHave.setHorizontalAlignment(SwingConstants.CENTER);
 		lblYouCouldHave.setBorder(new EmptyBorder(4, 4, 0, 4));
-		panel.add(lblYouCouldHave);
+		peopleCountPanel.add(lblYouCouldHave);
 
 		peopleCounter = new JLabel(String.valueOf(people));
 		peopleCounter.setForeground(new Color(255, 255, 0));
 		peopleCounter.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		peopleCounter.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(peopleCounter);
+		peopleCountPanel.add(peopleCounter);
 
 		JLabel lblPeopleShowUp = new JLabel("people show up");
 		lblPeopleShowUp.setFont(new Font("Noteworthy", Font.PLAIN, 15));
 		lblPeopleShowUp.setForeground(new Color(255, 255, 255));
 		lblPeopleShowUp.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lblPeopleShowUp);
+		peopleCountPanel.add(lblPeopleShowUp);
 
 		JLabel label = new JLabel("                                ");
 		gameInformationPanel.add(label);
@@ -235,16 +241,16 @@ public class DemoLemonadeStand extends JFrame {
 	 * @return
 	 */
 	private JPanel createOutputTextPanel() {
-		JPanel panel = new JPanel();
-		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel.setBackground(Color.LIGHT_GRAY);
+		JPanel mainInputPanel = new JPanel();
+		mainInputPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		mainInputPanel.setBackground(Color.LIGHT_GRAY);
 
-		panel.setLayout(new BorderLayout(0, 0));
+		mainInputPanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel inputPanel = new JPanel();
 		inputPanel.setBorder(new LineBorder(new Color(255, 250, 205), 2));
 		inputPanel.setBackground(new Color(255, 255, 204));
-		panel.add(inputPanel, BorderLayout.EAST);
+		mainInputPanel.add(inputPanel, BorderLayout.EAST);
 		inputPanel.setLayout(new GridLayout(3, 1, 0, 0));
 
 		JTextArea txtrHowMuch = new JTextArea();
@@ -329,8 +335,8 @@ public class DemoLemonadeStand extends JFrame {
 		txtrOutputTextPanel.setEditable(false);
 		txtrOutputTextPanel.setText(
 				"To start, enter how many cups you would like to make in the field provided and press \"Next Day\".\n");
-		panel.add(txtrOutputTextPanel, BorderLayout.CENTER);
-		return panel;
+		mainInputPanel.add(txtrOutputTextPanel, BorderLayout.CENTER);
+		return mainInputPanel;
 	}
 
 	/**
