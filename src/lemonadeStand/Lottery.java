@@ -1,13 +1,25 @@
 package lemonadeStand;
 
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings({ "unused", "serial" })
 public class Lottery extends DemoLemonadeStand {
 	private static int matchCheck;
 	private static int percent;
 	private static int finalAccountBal;
+	static int[] random;
+
+	public static String getRandom() {
+		StringBuilder sb = new StringBuilder();
+		for (int el : random) {
+			sb.append(el + " ");
+		}
+		return sb.toString();
+	}
 
 	private static int moneyWon;
 
@@ -29,7 +41,7 @@ public class Lottery extends DemoLemonadeStand {
 
 	public static int lottery(int currentMoney, int[] userNumbers, int wageredMoney) {
 
-		int[] random = randomNumbers();
+		random = randomNumbers();
 
 		finalAccountBal = currentMoney;
 
@@ -44,10 +56,14 @@ public class Lottery extends DemoLemonadeStand {
 	}
 
 	public static int[] randomNumbers() {
-		Random rand = new Random();
+		List<Integer> shuffeling = new ArrayList<Integer>();
+		for (int i = 1; i < 21; i++) {
+			shuffeling.add(i);
+		}
+		Collections.shuffle(shuffeling);
 		int[] lottoArray = new int[5];
-		for (int i = 0; i < lottoArray.length; i++) {
-			lottoArray[i] = rand.nextInt(20) + 1;
+		for (int j = 0; j < 5; j++) {
+			lottoArray[j] = shuffeling.get(j);
 		}
 		return lottoArray;
 	}
@@ -71,24 +87,44 @@ public class Lottery extends DemoLemonadeStand {
 		int percent = 0;
 		switch (numMatches) {
 		case 0:
+			Thread thread3 = new Thread() {
+				public void run() {
+					Music.crowdBoo();
+				}
+			};
+			thread3.start();
 			break;
 		case 1:
+			cheering();
 			percent = 1;
 			break;
 		case 2:
+			cheering();
 			percent = 2;
 			break;
 		case 3:
+			cheering();
 			percent = 3;
 			break;
 		case 4:
+			cheering();
 			percent = 5;
 			break;
 		case 5:
+			cheering();
 			percent = 10;
 			break;
 		}
 		return percent;
+	}
+
+	private static void cheering() {
+		Thread thread4 = new Thread() {
+			public void run() {
+				Music.Cheering();
+			}
+		};
+		thread4.start();
 	}
 
 }

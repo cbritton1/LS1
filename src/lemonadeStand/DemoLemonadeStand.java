@@ -58,7 +58,7 @@ public class DemoLemonadeStand extends JFrame {
 	public static double minChanceOfBully = .051; // 0% - 0.99%
 	public static double maxChanceOfBully = .10; // 0% - 0.99%
 	public static double minChanceOfLotto = .101; // 0% - 0.99%
-	public static double maxChanceOfLotto = .30; // 0% - 0.99%
+	public static double maxChanceOfLotto = .90; // 0% - 0.99%
 
 	private int money = 10;
 	private static int day = 1;
@@ -88,6 +88,8 @@ public class DemoLemonadeStand extends JFrame {
 	private JLabel cashWonLbl;
 	private JPanel collectPlayButtonPanel;
 	private JButton btnPlay;
+	private JLabel matchedNumbersLbl;
+	private JPanel payoutsPanel_1;
 
 	/**
 	 * Returns the day it is.
@@ -200,6 +202,7 @@ public class DemoLemonadeStand extends JFrame {
 		lottoryImage.setLayout(new BorderLayout(0, 0));
 
 		collectPlayButtonPanel = new JPanel();
+		collectPlayButtonPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		collectPlayButtonPanel.setBackground(new Color(255, 255, 255));
 		createLottoCollectPlayButtons(collectPlayButtonPanel);
 		lottoryImage.add(collectPlayButtonPanel, BorderLayout.SOUTH);
@@ -215,6 +218,7 @@ public class DemoLemonadeStand extends JFrame {
 		likeToPlayLottoPanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel lblNewLabel = new JPanel();
+		lblNewLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblNewLabel.setBackground(new Color(204, 255, 153));
 
 		JLabel lblNewLabel_2 = new JLabel("Would you like to play the lottery");
@@ -245,14 +249,16 @@ public class DemoLemonadeStand extends JFrame {
 
 		JTextArea lblNewLabel_1 = new JTextArea();
 		lblNewLabel_1.setBackground(new Color(204, 255, 153));
-		lblNewLabel_1.setBorder(new EmptyBorder(0, 10, 7, 0));
-		lblNewLabel_1.setText("You see a lottery ticket blowing down the sidewalk.\nYou pick it up and notice "
-				+ "it is blank!\nWould you like to test your luck and wager some of your hard earned money "
-				+ "playing\nthe lottery?");
+		lblNewLabel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
+		lblNewLabel_1.setText("   You see a lottery ticket blowing down the sidewalk.\n   You pick it up and notice "
+				+ "it is blank!\n   Would you like to test your luck and wager some of your hard earned money "
+				+ "playing\n   the lottery?");
 		lblNewLabel_1.setFont(new Font("Noteworthy", Font.PLAIN, 25));
 		likeToPlayLottoPanel.add(lblNewLabel_1, BorderLayout.NORTH);
 
 		JLabel lottoImage = new JLabel("");
+		lottoImage.setBorder(new LineBorder(new Color(0, 0, 0)));
+		lottoImage.setHorizontalAlignment(SwingConstants.CENTER);
 		lottoImage
 				.setIcon(new ImageIcon(DemoLemonadeStand.class.getResource("/lemonadeStand/Images/RainingMoney.jpg")));
 		likeToPlayLottoPanel.add(lottoImage, BorderLayout.CENTER);
@@ -274,6 +280,7 @@ public class DemoLemonadeStand extends JFrame {
 		pickYourNumbersPanel.add(lblPickYourNumbers, BorderLayout.NORTH);
 
 		luckyNumbersPanel_1 = new JPanel();
+		luckyNumbersPanel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		createLuckyNumbersPanel(pickYourNumbersPanel, luckyNumbersPanel_1);
 
 		JPanel payoutRecievedInfoPanel = new JPanel();
@@ -284,21 +291,22 @@ public class DemoLemonadeStand extends JFrame {
 		createLblPayoutRecievedAs(lblPayoutRecievedAs);
 		payoutRecievedInfoPanel.add(lblPayoutRecievedAs, BorderLayout.NORTH);
 
-		JPanel payoutsPanel = new JPanel();
-		createPayoutPanel(payoutRecievedInfoPanel, payoutsPanel);
+		payoutsPanel_1 = new JPanel();
+		payoutsPanel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
+		createPayoutPanel(payoutRecievedInfoPanel, payoutsPanel_1);
 
 	}
 
 	private void createLblPayoutRecievedAs(JLabel lblPayoutRecievedAs) {
 		lblPayoutRecievedAs.setOpaque(true);
-		lblPayoutRecievedAs.setForeground(new Color(255, 255, 255));
+		lblPayoutRecievedAs.setForeground(new Color(255, 0, 0));
 		lblPayoutRecievedAs.setBackground(new Color(0, 0, 0));
 		lblPayoutRecievedAs.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPayoutRecievedAs.setFont(new Font("Kokonor", Font.BOLD, 25));
+		lblPayoutRecievedAs.setFont(new Font("Kokonor", Font.BOLD, 30));
 	}
 
 	private void createPayoutPanel(JPanel payoutRecievedInfoPanel, JPanel payoutsPanel) {
-		payoutsPanel.setBackground(Color.WHITE);
+		payoutsPanel.setBackground(new Color(255, 255, 153));
 		payoutRecievedInfoPanel.add(payoutsPanel, BorderLayout.CENTER);
 		payoutsPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
@@ -341,11 +349,20 @@ public class DemoLemonadeStand extends JFrame {
 		lblMatch5.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		lblMatch5.setHorizontalAlignment(SwingConstants.CENTER);
 		payoutsPanel.add(lblMatch5);
-
+		
 		JLabel label = new JLabel("");
-		label.setBackground(new Color(204, 255, 153));
 		label.setOpaque(true);
-		payoutsPanel.add(label);
+		label.setBackground(new Color(204, 255, 153));
+		payoutsPanel_1.add(label);
+
+		matchedNumbersLbl = new JLabel("Winning Numbers are: ");
+		matchedNumbersLbl.setBorder(new LineBorder(new Color(0, 0, 0)));
+		matchedNumbersLbl.setForeground(new Color(255, 0, 0));
+		matchedNumbersLbl.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		matchedNumbersLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		matchedNumbersLbl.setBackground(new Color(153, 255, 51));
+		matchedNumbersLbl.setOpaque(true);
+		payoutsPanel.add(matchedNumbersLbl);
 
 		JPanel winningNumbersLbl = new JPanel();
 		winningNumbersLbl.setOpaque(true);
@@ -370,7 +387,7 @@ public class DemoLemonadeStand extends JFrame {
 	}
 
 	private void createLuckyNumbersPanel(JPanel pickYourNumbersPanel, JPanel luckyNumbersPanel) {
-		luckyNumbersPanel.setBackground(new Color(51, 204, 0));
+		luckyNumbersPanel.setBackground(new Color(204, 255, 153));
 		pickYourNumbersPanel.add(luckyNumbersPanel, BorderLayout.CENTER);
 		luckyNumbersPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
@@ -381,7 +398,7 @@ public class DemoLemonadeStand extends JFrame {
 		wageredMoney = new JTextField();
 		wageredMoney.setHorizontalAlignment(SwingConstants.CENTER);
 		wageredMoney.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		wageredMoney.setBorder(new LineBorder(new Color(0, 255, 0), 3));
+		wageredMoney.setBorder(new LineBorder(new Color(255, 51, 0), 3));
 		luckyNumbersPanel_1.add(wageredMoney);
 		wageredMoney.setColumns(10);
 
@@ -400,6 +417,7 @@ public class DemoLemonadeStand extends JFrame {
 		luckyNumbersPanel.add(lblLuckyNumber1);
 
 		luckyNumber1 = new JTextField();
+		luckyNumber1.setForeground(new Color(0, 153, 0));
 		luckyNumber1.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		luckyNumber1.setHorizontalAlignment(SwingConstants.CENTER);
 		luckyNumbersPanel.add(luckyNumber1);
@@ -410,6 +428,8 @@ public class DemoLemonadeStand extends JFrame {
 		luckyNumbersPanel.add(lblLuckyNumber2);
 
 		luckyNumber2 = new JTextField();
+		luckyNumber2.setForeground(new Color(0, 153, 0));
+		luckyNumber2.setSelectedTextColor(new Color(0, 0, 0));
 		luckyNumber2.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		luckyNumber2.setHorizontalAlignment(SwingConstants.CENTER);
 		luckyNumbersPanel.add(luckyNumber2);
@@ -420,6 +440,7 @@ public class DemoLemonadeStand extends JFrame {
 		luckyNumbersPanel.add(lblLuckyNumber3);
 
 		luckyNumber3 = new JTextField();
+		luckyNumber3.setForeground(new Color(0, 153, 0));
 		luckyNumber3.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		luckyNumber3.setHorizontalAlignment(SwingConstants.CENTER);
 		luckyNumbersPanel.add(luckyNumber3);
@@ -430,6 +451,7 @@ public class DemoLemonadeStand extends JFrame {
 		luckyNumbersPanel.add(lblLuckyNumber4);
 
 		luckyNumber4 = new JTextField();
+		luckyNumber4.setForeground(new Color(0, 153, 0));
 		luckyNumber4.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		luckyNumber4.setHorizontalAlignment(SwingConstants.CENTER);
 		luckyNumbersPanel.add(luckyNumber4);
@@ -440,6 +462,7 @@ public class DemoLemonadeStand extends JFrame {
 		luckyNumbersPanel.add(lblLuckyNumber5);
 
 		luckyNumber5 = new JTextField();
+		luckyNumber5.setForeground(new Color(0, 153, 0));
 		luckyNumber5.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		luckyNumber5.setHorizontalAlignment(SwingConstants.CENTER);
 		luckyNumbersPanel.add(luckyNumber5);
@@ -448,9 +471,9 @@ public class DemoLemonadeStand extends JFrame {
 
 	private void createLblPickYourNumbers(JLabel lblPickYourNumbers) {
 		lblPickYourNumbers.setBackground(new Color(0, 0, 0));
-		lblPickYourNumbers.setForeground(new Color(255, 255, 255));
+		lblPickYourNumbers.setForeground(new Color(255, 0, 0));
 		lblPickYourNumbers.setOpaque(true);
-		lblPickYourNumbers.setFont(new Font("Kokonor", Font.BOLD, 25));
+		lblPickYourNumbers.setFont(new Font("Kokonor", Font.BOLD, 30));
 		lblPickYourNumbers.setHorizontalAlignment(SwingConstants.CENTER);
 	}
 
@@ -462,19 +485,14 @@ public class DemoLemonadeStand extends JFrame {
 		btnPlay.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-//				//TODO				
-				String lucky1Text = luckyNumber1.getText();
-				int lucky1 = Integer.parseInt(lucky1Text);
-				String lucky2Text = luckyNumber2.getText();
-				int lucky2 = Integer.parseInt(lucky2Text);
-				String lucky3Text = luckyNumber3.getText();
-				int lucky3 = Integer.parseInt(lucky3Text);
-				String lucky4Text = luckyNumber4.getText();
-				int lucky4 = Integer.parseInt(lucky4Text);
-				String lucky5Text = luckyNumber5.getText();
-				int lucky5 = Integer.parseInt(lucky5Text);
-				String wagered = wageredMoney.getText();
-				int wageredInt = Integer.parseInt(wagered);
+				//TODO					
+				int lucky1 = Integer.parseInt(luckyNumber1.getText());
+				int lucky2 = Integer.parseInt(luckyNumber2.getText());		
+				int lucky3 = Integer.parseInt(luckyNumber3.getText());			
+				int lucky4 = Integer.parseInt(luckyNumber4.getText());	
+				int lucky5 = Integer.parseInt(luckyNumber5.getText());
+				int wageredInt = Integer.parseInt(wageredMoney.getText());
+				
 
 				int[] userArrays = { lucky1, lucky2, lucky3, lucky4, lucky5 };
 
@@ -482,6 +500,8 @@ public class DemoLemonadeStand extends JFrame {
 					txtrOutputTextPanel.setText("You do not have enough money to wager!");
 					Music.notEnoughMoney();
 				} else {
+// moved here btnPlay.setEnabled(false);
+					btnPlay.setEnabled(false);
 					Lottery.lottery(money, userArrays, wageredInt);
 					money = Lottery.getFinalAccountBal();
 					moneyInt.setText("" + Lottery.getFinalAccountBal());
@@ -496,12 +516,13 @@ public class DemoLemonadeStand extends JFrame {
 						txtrOutputTextPanel.setText("You got " + Lottery.getMatchCheck()
 								+ " numbers correct and will be credited NOTHING BUT HUGS!");
 					}
+					matchedNumbersLbl.setText("Winning Numbers were: " + Lottery.getRandom());
 					if (money <= 0) {
 						imagePanel.setLoser(true);
 					}
 
 				}
-				btnPlay.setEnabled(false);
+				
 
 			}
 		});
@@ -666,7 +687,8 @@ public class DemoLemonadeStand extends JFrame {
 		inputPanel.add(cupsBeingMade);
 		cupsBeingMade.setColumns(10);
 
-//NEXT DAY ACTION BUTTON	
+//NEXT DAY ACTION BUTTON
+		//TODO
 		btnNewButton = new JButton("Next Day");
 		btnNewButton.setFont(new Font("Noteworthy", Font.PLAIN, 13));
 		btnNewButton.setOpaque(true);
@@ -676,6 +698,8 @@ public class DemoLemonadeStand extends JFrame {
 				// reset storm to false
 				imagePanel.setStorm(false);
 				imagePanel.setBully(false);
+//added imagePanel.setLottery(false);		
+				imagePanel.setLottery(false);
 
 				imagePanel.setBackground(new Color(0, 191, 255));
 
@@ -688,7 +712,8 @@ public class DemoLemonadeStand extends JFrame {
 				} else {
 					money = StormBullyLotto.stormOrBully(money, chanceToHit);
 					moneyInt.setText(String.valueOf(money));
-					if (!(imagePanel.isStorm()) && !(imagePanel.isBully())) {
+// added  && !(imagePanel.isLottery())
+					if (!(imagePanel.isStorm()) && !(imagePanel.isBully()) && !(imagePanel.isLottery())) {
 						Music.playPourSound();
 						imagePanel.changeKid();
 						people = day + 11;

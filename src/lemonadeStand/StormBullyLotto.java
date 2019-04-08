@@ -40,6 +40,8 @@ public class StormBullyLotto extends DemoLemonadeStand {
 			}
 
 	    }else if ((num >= (minChanceOfLotto * chance)) && (num <= (maxChanceOfLotto * chance))){
+	    	imagePanel.setLottery(true);
+	    	Music.tada();
 			parentPanel.removeAll();
 			parentPanel.add(likeToPlayLottoPanel);
 			parentPanel.repaint();

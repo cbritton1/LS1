@@ -71,6 +71,27 @@ public class Music {
 	public static void bully() {
 		createMusicPlayer("Bully");
 	}
+	
+	/**
+	 * Plays tada music.
+	 */
+	public static void tada() {
+		createMusicPlayer("Tada");
+	}
+	
+	/**
+	 * plays crowd boo music.
+	 */
+	public static void crowdBoo() {
+		createMusicPlayer("CrowdBoo");
+	}
+	
+	/**
+	 * plays crowd cheering music.
+	 */
+	public static void Cheering() {
+		createMusicPlayer("Cheering");
+	}
 
 	/**
 	 * Creates a music player.
