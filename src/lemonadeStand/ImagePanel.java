@@ -21,13 +21,14 @@ public class ImagePanel extends JPanel {
 	private boolean winner = false;
 	private boolean storm = false;
 	private boolean bully = false;
-	private boolean lottery = false;
+	private static boolean lottery = false;
+
 	public boolean isLottery() {
 		return lottery;
 	}
 
-	public void setLottery(boolean lottery) {
-		this.lottery = lottery;
+	public static void setLottery(boolean lotto) {
+		lottery = lotto;
 	}
 
 	private String[] kids = { "bobs1", "Rick", "Sonic", "Morty", "homerRight", "trollface", };

@@ -26,6 +26,13 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -36,7 +43,7 @@ import javax.swing.border.TitledBorder;
 /**
  * Creates the game Lemonade Stand.
  * 
- * @author Cory Britton
+ * @author Cory Britton and Andrew McMullin
  *
  */
 @SuppressWarnings({ "serial", "unused" })
@@ -45,22 +52,18 @@ public class DemoLemonadeStand extends JFrame {
 	private JPanel contentPane;
 	public static JTextField cupsBeingMade;
 
-	// set amounts
-	private int amountToWin = 100;
+	// set your amounts
+	private int amountToWin = 100; //while running set at 500
+	private static int money = 10; //while running set at 10
+	
+	// These are for testing purposes only.
+	public static double chanceOfStorm = .05; // while running set at .05
+	public static double minChanceOfBully = .051; // while running set at .051
+	public static double maxChanceOfBully = .13; // while running set at .13	
+	public static double minChanceOfLotto = .131; // while running set at .131
+	public static double maxChanceOfLotto = .20; // while running set at .20
+	
 	int chanceToHit = 100;
-
-	/*
-	 * for testing purposes only. While running leave at chanceOfStorm .05,
-	 * minChanceOfBully = .051, maxChanceOfBully = .10, minChanceOfLotto = .101,
-	 * maxChanceOfLotto = .30
-	 */
-	public static double chanceOfStorm = .05; // 0% - 0.99%
-	public static double minChanceOfBully = .051; // 0% - 0.99%
-	public static double maxChanceOfBully = .10; // 0% - 0.99%
-	public static double minChanceOfLotto = .101; // 0% - 0.99%
-	public static double maxChanceOfLotto = .90; // 0% - 0.99%
-
-	private int money = 10;
 	private static int day = 1;
 	private int people = 11;
 	private int randomPeople;
@@ -70,7 +73,7 @@ public class DemoLemonadeStand extends JFrame {
 	protected static JLabel dayInt;
 
 	public static JTextPane txtrOutputTextPanel;
-	private JLabel moneyInt;
+	private static JLabel moneyInt;
 	private JLabel lblTitle;
 	private static JButton btnNewButton;
 	public static ImagePanel imagePanel;
@@ -88,33 +91,15 @@ public class DemoLemonadeStand extends JFrame {
 	private JLabel cashWonLbl;
 	private JPanel collectPlayButtonPanel;
 	private JButton btnPlay;
+	private int helpRate;
 	private JLabel matchedNumbersLbl;
 	private JPanel payoutsPanel_1;
-
-	/**
-	 * Returns the day it is.
-	 * 
-	 * @return
-	 */
-	public static int getDay() {
-		return day;
-	}
-
-	/**
-	 * Sets what day it is.
-	 * 
-	 * @param d
-	 */
-	public static void setDay(int d) {
-		day = d;
-	}
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		play();
-	}
+	// added
+	private JPanel storePanel;
+	private JTextField nameField;
+	private JPanel acceptInstructionsPanel_1;
+	private static JLabel lastPlayerLabel;
+	private JButton btnCollect;
 
 	/**
 	 * Starts the game.
@@ -135,7 +120,6 @@ public class DemoLemonadeStand extends JFrame {
 							DemoLemonadeStand frame = new DemoLemonadeStand();
 							frame.setVisible(true);
 							frame.getRootPane().setDefaultButton(btnNewButton);
-							Instructions.main(null);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -172,20 +156,108 @@ public class DemoLemonadeStand extends JFrame {
 
 		imagePanel = new ImagePanel();
 		parentPanel.setLayout(new CardLayout(0, 0));
-		parentPanel.add(imagePanel, "name_30405707861963");
-		imagePanel.setBackground(new Color(0, 191, 255));
+
+		JPanel instructionPanel = new JPanel();
+		createInstructionPanel(instructionPanel);
 
 		lotteryPanel = new JPanel();
 		lotteryPanel.setBorder(null);
 		JPanel lottoryImage = createLottoryPanel();
 		lotteryPanel.add(lottoryImage, BorderLayout.CENTER);
 
-//		StorePanel test1 = new StorePanel();
-//		
-//		parentPanel.removeAll();
-//		parentPanel.add(test1);
-//		parentPanel.repaint();
-//		parentPanel.revalidate();
+		storePanel = new StorePanel();
+		parentPanel.add(storePanel, "name_85186154351856");
+
+	}
+
+	private void createInstructionPanel(JPanel instructionPanel) {
+		parentPanel.add(instructionPanel, "name_26012592013971");
+		instructionPanel.setLayout(new BorderLayout(0, 0));
+
+		acceptInstructionsPanel_1 = new JPanel();
+		createInstructionPanel(instructionPanel, acceptInstructionsPanel_1);
+
+		JButton btnStartGame = new JButton("Start Game");
+		btnStartGame.setOpaque(true);
+		btnStartGame.setBackground(new Color(204, 255, 102));
+		btnStartGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setEnabledNextDay();
+				try (PrintWriter writer = new PrintWriter("src/lemonadeStand/Resources/PastUsers.txt")) {
+					writer.println(nameField.getText());
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				parentPanel.removeAll();
+				parentPanel.add(imagePanel);
+				parentPanel.repaint();
+				parentPanel.revalidate();
+			}
+		});
+		acceptInstructionsPanel_1.add(btnStartGame, BorderLayout.EAST);
+
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(new Color(255, 255, 51));
+		acceptInstructionsPanel_1.add(panel_2, BorderLayout.WEST);
+
+		JLabel lblLastPlayerWas = new JLabel("Last player was: ");
+		lblLastPlayerWas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLastPlayerWas.setFont(new Font("Noteworthy", Font.BOLD, 17));
+		panel_2.add(lblLastPlayerWas);
+
+		lastPlayerLabel = new JLabel("New label");
+		try (Scanner reader = new Scanner(new File("src/lemonadeStand/Resources/PastUsers.txt"))) {
+			while (reader.hasNextLine()) {
+				lastPlayerLabel.setText(reader.nextLine());
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		lastPlayerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lastPlayerLabel.setFont(new Font("Noteworthy", Font.PLAIN, 17));
+		panel_2.add(lastPlayerLabel);
+
+		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(new Color(255, 255, 51));
+		acceptInstructionsPanel_1.add(panel_3, BorderLayout.CENTER);
+
+		JLabel lblEnterYourName = new JLabel("Enter Your Name: ");
+		panel_3.add(lblEnterYourName);
+		lblEnterYourName.setFont(new Font("Noteworthy", Font.BOLD, 17));
+
+		nameField = new JTextField();
+		panel_3.add(nameField);
+		nameField.setFont(new Font("Noteworthy", Font.PLAIN, 16));
+		nameField.setColumns(10);
+
+		JLabel lblInstructions = new JLabel("Instructions");
+		lblInstructions.setOpaque(true);
+		lblInstructions.setBackground(new Color(255, 255, 51));
+		lblInstructions.setFont(new Font("Noteworthy", Font.PLAIN, 28));
+		lblInstructions.setHorizontalAlignment(SwingConstants.CENTER);
+		instructionPanel.add(lblInstructions, BorderLayout.NORTH);
+
+		JTextPane txtpnInstructionsGoHere = new JTextPane();
+		txtpnInstructionsGoHere.setBackground(new Color(255, 255, 204));
+		txtpnInstructionsGoHere.setEditable(false);
+		txtpnInstructionsGoHere.setBorder(new EmptyBorder(0, 10, 0, 10));
+		txtpnInstructionsGoHere.setFont(new Font("Noteworthy", Font.PLAIN, 16));
+		txtpnInstructionsGoHere.setText(
+				"We will give you $10 to start with. When you collect $500 you win!\nEach cup of lemonade costs $1.00 to make. "
+						+ "Each cup will sell for $2.00.\nYou won't know how many people will "
+						+ "show up to buy your delicious beverage. See the information panel to the left to get "
+						+ "a sence of how many people could possibly show up.\nFor each person that shows up that you can't provide a "
+						+ "glass of lemonade, you will need to reimburse them $1.00 for waiting in this crazy heat.\n\n"
+						+ "Keep an eye out for an incoming storm, a passing bully, or a lucky lottery ticket blowing down the "
+						+ "street.\n\nOh, and be sure to visit the store to purchase helpful items!");
+		instructionPanel.add(txtpnInstructionsGoHere, BorderLayout.CENTER);
+	}
+
+	private void createInstructionPanel(JPanel instructionPanel, JPanel acceptInstructionsPanel) {
+		instructionPanel.add(acceptInstructionsPanel, BorderLayout.SOUTH);
+		acceptInstructionsPanel_1.setLayout(new BorderLayout(0, 0));
+		parentPanel.add(imagePanel, "name_30405707861963");
+		imagePanel.setBackground(new Color(0, 191, 255));
 	}
 
 	private JPanel createLottoryPanel() {
@@ -228,6 +300,7 @@ public class DemoLemonadeStand extends JFrame {
 		JButton btnYes = new JButton("YES");
 		btnYes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				btnCollect.setEnabled(false);
 				parentPanel.removeAll();
 				parentPanel.add(lotteryPanel);
 				parentPanel.repaint();
@@ -239,6 +312,7 @@ public class DemoLemonadeStand extends JFrame {
 		JButton btnNo = new JButton("NO");
 		btnNo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setEnabledNextDay();
 				parentPanel.removeAll();
 				parentPanel.add(imagePanel);
 				parentPanel.repaint();
@@ -261,7 +335,7 @@ public class DemoLemonadeStand extends JFrame {
 		lottoImage.setHorizontalAlignment(SwingConstants.CENTER);
 		lottoImage
 				.setIcon(new ImageIcon(DemoLemonadeStand.class.getResource("/lemonadeStand/Images/RainingMoney.jpg")));
-		likeToPlayLottoPanel.add(lottoImage, BorderLayout.CENTER);
+		likeToPlayLottoPanel.add(lottoImage, BorderLayout.WEST);
 		lotteryPanel.setBackground(new Color(204, 255, 153));
 		parentPanel.add(lotteryPanel, "name_31126836811327");
 		lotteryPanel.setLayout(new BorderLayout(0, 0));
@@ -282,6 +356,24 @@ public class DemoLemonadeStand extends JFrame {
 		luckyNumbersPanel_1 = new JPanel();
 		luckyNumbersPanel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		createLuckyNumbersPanel(pickYourNumbersPanel, luckyNumbersPanel_1);
+
+		JLabel lblClickToPlay = new JLabel("");
+		lblClickToPlay.setHorizontalAlignment(SwingConstants.RIGHT);
+		luckyNumbersPanel_1.add(lblClickToPlay);
+
+		btnPlay = new JButton("Play");
+		btnPlay.setBorder(new LineBorder(new Color(0, 0, 0), 3));
+		btnPlay.setOpaque(true);
+		luckyNumbersPanel_1.add(btnPlay);
+		btnPlay.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				playLottery();
+			}
+		});
+		btnPlay.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		btnPlay.setForeground(new Color(255, 0, 0));
+		btnPlay.setBackground(new Color(204, 255, 0));
 
 		JPanel payoutRecievedInfoPanel = new JPanel();
 		mainLottoryPanel.add(payoutRecievedInfoPanel);
@@ -349,7 +441,7 @@ public class DemoLemonadeStand extends JFrame {
 		lblMatch5.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		lblMatch5.setHorizontalAlignment(SwingConstants.CENTER);
 		payoutsPanel.add(lblMatch5);
-		
+
 		JLabel label = new JLabel("");
 		label.setOpaque(true);
 		label.setBackground(new Color(204, 255, 153));
@@ -480,72 +572,22 @@ public class DemoLemonadeStand extends JFrame {
 	private void createLottoCollectPlayButtons(JPanel panel) {
 		panel.setLayout(new GridLayout(0, 4, 0, 0));
 
-		btnPlay = new JButton("Play");
-		collectPlayButtonPanel.add(btnPlay);
-		btnPlay.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				//TODO					
-				int lucky1 = Integer.parseInt(luckyNumber1.getText());
-				int lucky2 = Integer.parseInt(luckyNumber2.getText());		
-				int lucky3 = Integer.parseInt(luckyNumber3.getText());			
-				int lucky4 = Integer.parseInt(luckyNumber4.getText());	
-				int lucky5 = Integer.parseInt(luckyNumber5.getText());
-				int wageredInt = Integer.parseInt(wageredMoney.getText());
-				
-
-				int[] userArrays = { lucky1, lucky2, lucky3, lucky4, lucky5 };
-
-				if (wageredInt > money) {
-					txtrOutputTextPanel.setText("You do not have enough money to wager!");
-					Music.notEnoughMoney();
-				} else {
-// moved here btnPlay.setEnabled(false);
-					btnPlay.setEnabled(false);
-					Lottery.lottery(money, userArrays, wageredInt);
-					money = Lottery.getFinalAccountBal();
-					moneyInt.setText("" + Lottery.getFinalAccountBal());
-
-					if (Lottery.getPercent() >= 1) {
-						txtrOutputTextPanel
-								.setText(String.format("You got %d numbers correct and will be credited %d00%%%n",
-										Lottery.getMatchCheck(), Lottery.getPercent()));
-						numbersMatchedLbl.setText("" + Lottery.getMatchCheck());
-						cashWonLbl.setText("" + Lottery.getMoneyWon());
-					} else {
-						txtrOutputTextPanel.setText("You got " + Lottery.getMatchCheck()
-								+ " numbers correct and will be credited NOTHING BUT HUGS!");
-					}
-					matchedNumbersLbl.setText("Winning Numbers were: " + Lottery.getRandom());
-					if (money <= 0) {
-						imagePanel.setLoser(true);
-					}
-
-				}
-				
-
-			}
-		});
-		btnPlay.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-		btnPlay.setForeground(new Color(255, 0, 0));
-		btnPlay.setOpaque(true);
-		btnPlay.setBackground(new Color(204, 255, 153));
-
 		JLabel EmptyPlaceholderLeft = new JLabel("");
 		EmptyPlaceholderLeft.setOpaque(true);
-		EmptyPlaceholderLeft.setBackground(new Color(204, 255, 153));
+		EmptyPlaceholderLeft.setBackground(new Color(0, 0, 0));
 		panel.add(EmptyPlaceholderLeft);
 
 		JLabel emptyPlaceholderRight = new JLabel("");
 		emptyPlaceholderRight.setOpaque(true);
-		emptyPlaceholderRight.setBackground(new Color(204, 255, 153));
+		emptyPlaceholderRight.setBackground(new Color(0, 0, 0));
 		panel.add(emptyPlaceholderRight);
 
-		JButton btnCollect = new JButton("Collect");
+		btnCollect = new JButton("Collect");
 		btnCollect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setEnabledNextDay();
+				matchedNumbersLbl.setText("Winning Numbers are: ");
 				txtrOutputTextPanel.setText("You now have  " + Lottery.getFinalAccountBal());
-				// TODO
 				btnPlay.setEnabled(true);
 				parentPanel.removeAll();
 				parentPanel.add(imagePanel);
@@ -557,8 +599,15 @@ public class DemoLemonadeStand extends JFrame {
 				luckyNumber3.setText("");
 				luckyNumber4.setText("");
 				luckyNumber5.setText("");
+				numbersMatchedLbl.setText("0");
+				cashWonLbl.setText("0");
 			}
 		});
+
+		JLabel label = new JLabel("");
+		label.setOpaque(true);
+		label.setBackground(new Color(0, 0, 0));
+		collectPlayButtonPanel.add(label);
 		btnCollect.setForeground(new Color(255, 0, 0));
 		btnCollect.setFont(new Font("Lucida Grande", Font.BOLD, 15));
 		btnCollect.setOpaque(true);
@@ -579,6 +628,7 @@ public class DemoLemonadeStand extends JFrame {
 	 */
 	private JPanel createInfoLabel() {
 		JPanel gameInformationPanel = new JPanel();
+		gameInformationPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		gameInformationPanel.setBackground(new Color(255, 255, 153));
 
 		gameInformationPanel.setLayout(new GridLayout(7, 1, 0, 0));
@@ -650,7 +700,23 @@ public class DemoLemonadeStand extends JFrame {
 		JLabel label_1 = new JLabel("");
 		gameInformationPanel.add(label_1);
 
-		JButton btnStore = new JButton("Store");
+		JButton btnStore = new JButton("Enter Store");
+		btnStore.setBorder(new LineBorder(new Color(0, 0, 0), 3));
+		btnStore.setFont(new Font("Noteworthy", Font.PLAIN, 18));
+		btnStore.setOpaque(true);
+		btnStore.setBackground(new Color(153, 102, 0));
+		btnStore.addActionListener(new ActionListener() {
+			JPanel temp = null;
+
+			public void actionPerformed(ActionEvent e) {
+				btnNewButton.setEnabled(false);
+				Music.DoorClosing();
+				parentPanel.removeAll();
+				parentPanel.add(storePanel);
+				parentPanel.repaint();
+				parentPanel.revalidate();
+			}
+		});
 		gameInformationPanel.add(btnStore);
 		return gameInformationPanel;
 	}
@@ -662,12 +728,26 @@ public class DemoLemonadeStand extends JFrame {
 	 */
 	private JPanel createOutputTextPanel() {
 		JPanel mainInputPanel = new JPanel();
+		mainInputPanel.setPreferredSize(new Dimension(10, 175));
 		mainInputPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		mainInputPanel.setBackground(Color.LIGHT_GRAY);
 
 		mainInputPanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel inputPanel = new JPanel();
+		createInputPanel(mainInputPanel, inputPanel);
+
+		txtrOutputTextPanel = new JTextPane();
+		txtrOutputTextPanel.setFont(new Font("Noteworthy", Font.PLAIN, 15));
+		txtrOutputTextPanel.setBorder(new EmptyBorder(8, 8, 0, 0));
+		txtrOutputTextPanel.setEditable(false);
+		txtrOutputTextPanel.setText(
+				"To start, enter how many cups you would like to make in the field provided and press \"Next Day\".\n");
+		mainInputPanel.add(txtrOutputTextPanel, BorderLayout.CENTER);
+		return mainInputPanel;
+	}
+
+	private void createInputPanel(JPanel mainInputPanel, JPanel inputPanel) {
 		inputPanel.setBorder(new LineBorder(new Color(255, 250, 205), 2));
 		inputPanel.setBackground(new Color(255, 255, 204));
 		mainInputPanel.add(inputPanel, BorderLayout.EAST);
@@ -680,7 +760,6 @@ public class DemoLemonadeStand extends JFrame {
 		txtrHowMuch.setText("How many cups would \n" + "you like to make?");
 		inputPanel.add(txtrHowMuch);
 
-		// CUPS MADE INPUT
 		cupsBeingMade = new JTextField();
 		cupsBeingMade.setHorizontalAlignment(SwingConstants.CENTER);
 		cupsBeingMade.setBorder(new LineBorder(new Color(0, 0, 0), 4));
@@ -688,80 +767,19 @@ public class DemoLemonadeStand extends JFrame {
 		cupsBeingMade.setColumns(10);
 
 //NEXT DAY ACTION BUTTON
-		//TODO
+
 		btnNewButton = new JButton("Next Day");
 		btnNewButton.setFont(new Font("Noteworthy", Font.PLAIN, 13));
 		btnNewButton.setOpaque(true);
+		setDisabledNextDay();
 		btnNewButton.setBackground(new Color(204, 255, 153));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// reset storm to false
-				imagePanel.setStorm(false);
-				imagePanel.setBully(false);
-//added imagePanel.setLottery(false);		
-				imagePanel.setLottery(false);
-
-				imagePanel.setBackground(new Color(0, 191, 255));
-
-				if (!LemonadeStandLogic.canAffordRequestedCups(Integer.parseInt(cupsBeingMade.getText()), money)) {
-					if (money > 0) {
-						txtrOutputTextPanel.setText("You do not have enough money to make that many cups.");
-						cupsBeingMade.setText("");
-						Music.notEnoughMoney();
-					}
-				} else {
-					money = StormBullyLotto.stormOrBully(money, chanceToHit);
-					moneyInt.setText(String.valueOf(money));
-// added  && !(imagePanel.isLottery())
-					if (!(imagePanel.isStorm()) && !(imagePanel.isBully()) && !(imagePanel.isLottery())) {
-						Music.playPourSound();
-						imagePanel.changeKid();
-						people = day + 11;
-						day++;
-						peopleCounter.setText(String.valueOf(people));
-						dayInt.setText(String.valueOf(day));
-
-						cupsMade = Integer.parseInt(cupsBeingMade.getText());
-
-						randomPeople = LemonadeStandLogic.randomPeople(day);
-						cupsSold = LemonadeStandLogic.cupsSold(cupsMade, randomPeople);
-
-						money = money - cupsMade;
-						money = LemonadeStandLogic.currentMoney(cupsSold, money);
-						money = LemonadeStandLogic.cantSupply(randomPeople, cupsMade, money);
-
-						moneyInt.setText(String.valueOf(money));
-						cupsBeingMade.setText("");
-
-						if (money <= 0) {
-							txtrOutputTextPanel.setText("You made " + cupsMade + " cups.\n" + randomPeople
-									+ " people showed up for your delicious beverage.\n" + "You sold " + cupsSold
-									+ " cups.\n\nYou are now a homeless bum. Thanks for playing.");
-//							playAgain.main(null);
-							imagePanel.setLoser(true);
-						} else if (money >= amountToWin) {
-							txtrOutputTextPanel.setText("You win! Go treat yo self!");
-							imagePanel.setWinner(true);
-//							playAgain.main(null);
-						} else {
-							txtrOutputTextPanel.setText("You made " + cupsMade + " cups.\n" + randomPeople
-									+ " people showed up for your delicious beverage.\n" + "You sold " + cupsSold
-									+ " cups.");
-						}
-					}
-				}
+				gamePlay();
 			}
+
 		});
 		inputPanel.add(btnNewButton);
-
-		txtrOutputTextPanel = new JTextPane();
-		txtrOutputTextPanel.setFont(new Font("Noteworthy", Font.PLAIN, 15));
-		txtrOutputTextPanel.setBorder(new EmptyBorder(8, 8, 0, 0));
-		txtrOutputTextPanel.setEditable(false);
-		txtrOutputTextPanel.setText(
-				"To start, enter how many cups you would like to make in the field provided and press \"Next Day\".\n");
-		mainInputPanel.add(txtrOutputTextPanel, BorderLayout.CENTER);
-		return mainInputPanel;
 	}
 
 	/**
@@ -771,12 +789,177 @@ public class DemoLemonadeStand extends JFrame {
 	 */
 	private JLabel createLblTitle() {
 		lblTitle = new JLabel("Lemonade Stand");
-		lblTitle.setBorder(new EmptyBorder(2, 0, 0, 0));
+		lblTitle.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblTitle.setOpaque(true);
 		lblTitle.setBackground(new Color(255, 255, 204));
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Noteworthy", Font.BOLD, 22));
 		return lblTitle;
+	}
+
+	/**
+	 * Sets the amount of money you have.
+	 * 
+	 * @param cash
+	 */
+	public static void setMoney(int cash) {
+		money = cash;
+		moneyInt.setText("" + money);
+	}
+
+	/**
+	 * Returns how much money you have.
+	 * 
+	 * @return
+	 */
+	public static int getMoney() {
+		return money;
+	}
+
+	/**
+	 * Enables the next day button.
+	 */
+	public static void setEnabledNextDay() {
+		btnNewButton.setEnabled(true);
+	}
+
+	/**
+	 * Disables the next day button
+	 */
+	public static void setDisabledNextDay() {
+		btnNewButton.setEnabled(false);
+	}
+
+	/**
+	 * Returns the day it is.
+	 * 
+	 * @return
+	 */
+	public static int getDay() {
+		return day;
+	}
+
+	/**
+	 * Sets what day it is.
+	 * 
+	 * @param d
+	 */
+	public static void setDay(int d) {
+		day = d;
+	}
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		play();
+	}
+	
+	/**
+	 * This is the lottery.
+	 */
+	private void playLottery() {
+		btnCollect.setEnabled(true);
+		int lucky1 = Integer.parseInt(luckyNumber1.getText());
+		int lucky2 = Integer.parseInt(luckyNumber2.getText());
+		int lucky3 = Integer.parseInt(luckyNumber3.getText());
+		int lucky4 = Integer.parseInt(luckyNumber4.getText());
+		int lucky5 = Integer.parseInt(luckyNumber5.getText());
+		int wageredInt = Integer.parseInt(wageredMoney.getText());
+
+		int[] userArrays = { lucky1, lucky2, lucky3, lucky4, lucky5 };
+
+		if (wageredInt > money) {
+			txtrOutputTextPanel.setText("You do not have enough money to wager!");
+			Music.notEnoughMoney();
+		} else {
+			btnPlay.setEnabled(false);
+			Lottery.lottery(money, userArrays, wageredInt);
+			money = Lottery.getFinalAccountBal();
+			moneyInt.setText("" + Lottery.getFinalAccountBal());
+
+			if (Lottery.getPercent() >= 1) {
+				txtrOutputTextPanel
+						.setText(String.format("You got %d numbers correct and will be credited %d00%%%n",
+								Lottery.getMatchCheck(), Lottery.getPercent()));
+				numbersMatchedLbl.setText("" + Lottery.getMatchCheck());
+				cashWonLbl.setText("" + Lottery.getMoneyWon());
+			} else {
+				txtrOutputTextPanel.setText("You got " + Lottery.getMatchCheck()
+						+ " numbers correct and will be credited NOTHING BUT HUGS!");
+			}
+			matchedNumbersLbl.setText("Winning Numbers were: " + Lottery.getRandom());
+			if (money <= 0) {
+				imagePanel.setLoser(true);
+			}
+
+		}
+	}
+
+	/**
+	 * This executes the game-play.
+	 */
+	private void gamePlay() {
+		try {
+			// reset storm to false
+			imagePanel.setStorm(false);
+			imagePanel.setBully(false);
+			ImagePanel.setLottery(false);
+
+			imagePanel.setBackground(new Color(0, 191, 255));
+
+			if (!LemonadeStandLogic.canAffordRequestedCups(Integer.parseInt(cupsBeingMade.getText()), money)) {
+
+				if (money > 0) {
+					txtrOutputTextPanel.setText("You do not have enough money to make that many cups.");
+					cupsBeingMade.setText("");
+					Music.notEnoughMoney();
+				}
+			} else {
+				money = StormBullyLotto.stormOrBully(money, chanceToHit);
+				moneyInt.setText(String.valueOf(money));
+				if (!(imagePanel.isStorm()) && !(imagePanel.isBully()) && !(imagePanel.isLottery())) {
+
+					Music.playPourSound();
+					imagePanel.changeKid();
+					people = day + 11;
+					day++;
+					peopleCounter.setText(String.valueOf(people));
+					dayInt.setText(String.valueOf(day));
+
+					cupsMade = Integer.parseInt(cupsBeingMade.getText());
+
+					randomPeople = LemonadeStandLogic.randomPeople(day);
+					cupsSold = LemonadeStandLogic.cupsSold(cupsMade, randomPeople);
+
+					money = money - cupsMade;
+					money = LemonadeStandLogic.currentMoney(cupsSold, money);
+					money = LemonadeStandLogic.cantSupply(randomPeople, cupsMade, money);
+
+					moneyInt.setText(String.valueOf(money));
+					cupsBeingMade.setText("");
+
+					if (money <= 0) {
+						txtrOutputTextPanel.setText("You made " + cupsMade + " cups.\n" + randomPeople
+								+ " people showed up for your delicious beverage.\n" + "You sold " + cupsSold
+								+ " cups.\n\nYou are now a homeless bum. Thanks for playing.");
+						// playAgain.main(null);
+						imagePanel.setLoser(true);
+					} else if (money >= amountToWin) {
+						txtrOutputTextPanel.setText("You win! Go treat yo self!");
+						imagePanel.setWinner(true);
+						// playAgain.main(null);
+					} else {
+						txtrOutputTextPanel.setText("You made " + cupsMade + " cups.\n" + randomPeople
+								+ " people showed up for your delicious beverage.\n" + "You sold " + cupsSold
+								+ " cups.");
+					}
+
+				}
+			}
+		} catch (NumberFormatException ex) {
+			txtrOutputTextPanel.setText("Must enter a number");
+		}
 	}
 
 }

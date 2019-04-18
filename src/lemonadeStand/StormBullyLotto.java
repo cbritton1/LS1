@@ -12,8 +12,10 @@ import java.util.Random;
 @SuppressWarnings({ "serial", "unused" })
 public class StormBullyLotto extends DemoLemonadeStand {
 
+	private static double helpRate = 0.7;
+
 	/**
-	 * decides if you get to experience the storm, bully, or lotto.
+	 * decides if you get to experience the storm, bully, or lottery.
 	 * 
 	 * @param money
 	 * @param chance
@@ -39,15 +41,20 @@ public class StormBullyLotto extends DemoLemonadeStand {
 				Music.youLose();
 			}
 
-	    }else if ((num >= (minChanceOfLotto * chance)) && (num <= (maxChanceOfLotto * chance))){
-	    	imagePanel.setLottery(true);
-	    	Music.tada();
+		} else if ((num >= (minChanceOfLotto * chance)) && (num <= (maxChanceOfLotto * chance))) {
+			ImagePanel.setLottery(true);
+			setDisabledNextDay();
 			parentPanel.removeAll();
 			parentPanel.add(likeToPlayLottoPanel);
 			parentPanel.repaint();
 			parentPanel.revalidate();
-//	       money = Lottery.lottery(money);
-//	         
+			Thread thread3 = new Thread() {
+				public void run() {
+					Music.lotto();
+				}
+			};
+			thread3.start();
+
 		} else if ((num >= (minChanceOfBully * chance)) && (num <= (maxChanceOfBully * chance))) {
 			incrementDay();
 			money = Bully.bully(money);
@@ -60,7 +67,6 @@ public class StormBullyLotto extends DemoLemonadeStand {
 			thread3.start();
 		}
 		return money;
-
 	}
 
 	/**
@@ -80,11 +86,36 @@ public class StormBullyLotto extends DemoLemonadeStand {
 	 * @return
 	 */
 	public static int storm(int money) {
-		Random rand = new Random();
-		int keep = rand.nextInt(3) + 7;
-		int newMoney = (int) (money * (keep * 0.1));
+		int newMoney = (int) (money * helpRate);
 		int loss = money - newMoney;
 		DemoLemonadeStand.txtrOutputTextPanel.setText("You Lost " + loss + " dollars due to the storm today.");
 		return newMoney;
 	}
+
+	public static void setUmbrellaHelpRate(int level) {
+		switch (level) {
+		case 1:
+			helpRate = 0.75;
+			break;
+		case 2:
+			helpRate = 0.79;
+			break;
+		case 3:
+			helpRate = 0.83;
+			break;
+		case 4:
+			helpRate = 0.87;
+			break;
+		case 5:
+			helpRate = 0.92;
+			break;
+		default:
+			helpRate = 0.70;
+		}
+	}
+
+	public static double getHelpRate() {
+		return helpRate;
+	}
+
 }

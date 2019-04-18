@@ -11,6 +11,8 @@ import java.util.Random;
 @SuppressWarnings("serial")
 public class LemonadeStandLogic extends DemoLemonadeStand {
 
+	private static int treeHuggers;
+
 	/**
 	 * Checks to see if you can afford to make the requested cups.
 	 * 
@@ -80,8 +82,13 @@ public class LemonadeStandLogic extends DemoLemonadeStand {
 	 */
 	public static int cantSupply(int randomPeople, int cupsMade, int money) {
 		int deducted = 0;
+		int capacity = (StorePanel.getTreeCap());
+		int extraPeople = (randomPeople - cupsMade);
 		if (randomPeople > cupsMade) {
-			deducted = money - (randomPeople - cupsMade);
+			if (extraPeople > capacity)
+				deducted = money - (extraPeople - capacity);
+			else
+				deducted = money;
 		} else
 			deducted = money;
 
@@ -90,5 +97,13 @@ public class LemonadeStandLogic extends DemoLemonadeStand {
 		}
 
 		return deducted;
+	}
+
+	public static int getTreeHuggers() {
+		return treeHuggers;
+	}
+
+	public static void setTreeHuggers(int treeHuggers) {
+		LemonadeStandLogic.treeHuggers = treeHuggers;
 	}
 }

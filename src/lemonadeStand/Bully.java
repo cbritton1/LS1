@@ -30,28 +30,28 @@ public class Bully {
 		switch (random) {
 		case 0:
 			whatHappened = "twisted your arm";
-			takenMoney = (int) (money * .50);
+			takenMoney = (int) (money * .15);
 			totalMoney = money - takenMoney;
 			ImagePanel.setBullyIndex(0);
 			break;
 
 		case 1:
 			whatHappened = "pulled your hair";
-			takenMoney = (int) (money * .30);
+			takenMoney = (int) (money * .10);
 			totalMoney = money - takenMoney;
 			ImagePanel.setBullyIndex(1);
 			break;
 
 		case 2:
 			whatHappened = "gave you a wedgie";
-			takenMoney = (int) (money * .70);
+			takenMoney = (int) (money * .20);
 			totalMoney = money - takenMoney;
 			ImagePanel.setBullyIndex(2);
 			break;
 
 		case 3:
 			whatHappened = "tied your shoes together";
-			takenMoney = (int) (money * .20);
+			takenMoney = (int) (money * .05);
 			totalMoney = money - takenMoney;
 			ImagePanel.setBullyIndex(3);
 			break;

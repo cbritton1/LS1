@@ -6,6 +6,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This is the lottery logic.
+ * 
+ * @author Cory Britton
+ *
+ */
 @SuppressWarnings({ "unused", "serial" })
 public class Lottery extends DemoLemonadeStand {
 	private static int matchCheck;
@@ -45,7 +51,7 @@ public class Lottery extends DemoLemonadeStand {
 
 		finalAccountBal = currentMoney;
 
-		// Caluculates how much money you have after wagering
+		// Calculates how much money you have after wagering
 		currentMoney = currentMoney - wageredMoney;
 		matchCheck = compareNumbers(random, userNumbers);
 		percent = howMuchMoneyWon(matchCheck);
@@ -55,11 +61,17 @@ public class Lottery extends DemoLemonadeStand {
 		return finalAccountBal;
 	}
 
+	/**
+	 * Picks random number between 1 - 20.
+	 * 
+	 * @return
+	 */
 	public static int[] randomNumbers() {
 		List<Integer> shuffeling = new ArrayList<Integer>();
 		for (int i = 1; i < 21; i++) {
 			shuffeling.add(i);
 		}
+
 		Collections.shuffle(shuffeling);
 		int[] lottoArray = new int[5];
 		for (int j = 0; j < 5; j++) {
@@ -68,6 +80,13 @@ public class Lottery extends DemoLemonadeStand {
 		return lottoArray;
 	}
 
+	/**
+	 * compare user numbers to the random numbers in the lottery.
+	 * 
+	 * @param lottoArray
+	 * @param userArray
+	 * @return
+	 */
 	public static int compareNumbers(int[] lottoArray, int[] userArray) {
 		int matchCheck = 0;
 		for (int i = 0; i < lottoArray.length; i++) {
@@ -83,6 +102,12 @@ public class Lottery extends DemoLemonadeStand {
 		return matchCheck;
 	}
 
+	/**
+	 * Pays out depending on how many matches you got.
+	 * 
+	 * @param numMatches
+	 * @return
+	 */
 	public static int howMuchMoneyWon(int numMatches) {
 		int percent = 0;
 		switch (numMatches) {
